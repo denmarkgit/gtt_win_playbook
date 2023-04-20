@@ -1,6 +1,8 @@
 ---
-- name: Windows Playbook
-  hosts: all
+
+- name: Bootsrapping new hosts
+  hosts: win
+  tags: ["bootstrap_play"]
 
   vars_files:
     - default.config.yml
@@ -13,11 +15,6 @@
       tags: ["always"]
 
   tasks:
-    - name: Include hostname configuration.
-      ansible.builtin.import_tasks:
-        file: tasks/hostname.yml
-      when: configure_hostname
-      tags: ["hostname"]
 
     - name: Include windows updates configuration.
       ansible.builtin.import_tasks:
@@ -126,3 +123,115 @@
         file: tasks/defrag.yml
       when: defrag_volumes
       tags: ["defrag"]
+
+    - name: Install gdc-kyocera-printer
+      ansible.builtin.import_tasks:
+        file: tasks/gdc_kyocera.yml
+      when: install_kyocera
+      tags: ["gdc_kyocera"]
+
+    - name: Add new account
+      ansible.builtin.import_tasks:
+        file: tasks/new_account.yml
+      when: add_new_account
+      tags: ["new_account"]
+
+    - name: Include hostname configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/hostname.yml
+      when: configure_hostname
+      tags: ["hostname"]
+
+
+- name: Nas playbook
+  hosts: nas
+  tags: ["nas_play"]
+
+  vars_files:
+    - default.config.yml
+
+  pre_tasks:
+    - name: Include playbook user configuration.
+      ansible.builtin.include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ["always"]
+
+  tasks:
+
+    - name: Adding nas account
+      ansible.builtin.import_tasks:
+        file: tasks/nas.yml
+      when: add_nas_account
+      tags: ["nas"]
+
+
+- name: Provisioning new host
+  hosts: win
+  tags: ["new_host_play"]
+
+  vars:
+    ansible_user: "{{ win_user_name }}"
+    ansible_password: "{{ win_password }}"
+
+  vars_files:
+    - default.config.yml
+
+  pre_tasks:
+    - name: Include playbook user configuration.
+      ansible.builtin.include_vars: "{{ item }}"
+      with_fileglob:
+        - "{{ playbook_dir }}/config.yml"
+      tags: ["always"]
+
+  tasks:
+
+    - name: Copy Installers
+      ansible.builtin.import_tasks:
+        file: tasks/copy_installers.yml
+      when: copy_installers
+      tags: ["installers"]
+
+    - name: Install rms
+      ansible.builtin.import_tasks:
+        file: tasks/rms.yml
+      when: install_rms
+      tags: ["rms"]
+
+    - name: Map network drive
+      ansible.builtin.import_tasks:
+        file: tasks/map_drive.yml
+      when: map_drive
+      tags: ["map_drive"]
+
+    - name: Include debloat configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/debloat.yml
+      when: remove_bloatware
+      tags: ["debloat2"]
+
+    - name: Include explorer configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/explorer.yml
+      when: configure_explorer
+      tags: ["explorer2"]
+
+    - name: Include taskbar configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/taskbar.yml
+      when: configure_taskbar
+      tags: ["taskbar2"]
+
+    - name: Include start menu configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/start_menu.yml
+      when: configure_start_menu
+      tags: ["start_menu"]
+
+    - name: Include desktop configuration.
+      ansible.builtin.import_tasks:
+        file: tasks/desktop.yml
+      when: remove_desktop_icons
+      tags: ["desktop"]
+
+

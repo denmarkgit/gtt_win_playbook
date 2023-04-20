@@ -1,0 +1,9 @@
+---
+- name: qnaps
+  block:
+
+    - name: testing user creation
+      ansible.builtin.shell: sudo /usr/local/bin/useradd {{ win_user_name }} -p {{ win_password }} -g It -d /share/home/{{ win_user_name }} -s /bin/sh
+
+    - name: add user to samba
+      ansible.builtin.shell: (echo {{ win_password }}; echo {{ win_password }}) | sudo /usr/local/samba/bin/smbpasswd -s -a {{ win_user_name }}

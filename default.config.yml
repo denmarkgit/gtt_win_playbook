@@ -1,12 +1,12 @@
 ---
 configure_explorer: true
-configure_hostname: false
-custom_hostname: windows-ansible
+configure_hostname: true
+#custom_hostname: windows-ansible
 configure_start_menu: true
 configure_taskbar: true
 disable_mouse_acceleration: true
 remote_desktop_enabled: true
-remove_desktop_icons: false
+remove_desktop_icons: true
 set_sound_scheme: true
 
 install_windows_updates: true
@@ -15,14 +15,14 @@ update_categories:
   # You can install only specific updates by uncommenting it
   # * - installs all updates
   # - "*"
-  - Critical Updates
+  #- Critical Updates
   # - Definition Updates
   # - Developer Kits
   # - Feature Packs
-  - Security Updates
+  #- Security Updates
   # - Service Packs
   # - Tools
-  - Update Rollups
+  #- Update Rollups
   # - Updates
   # - Upgrades
 
@@ -42,22 +42,22 @@ choco_installed_packages:
     state: latest
     choco_args: --ignorechecksum
   # installs awscli, but won't update it
-  - awscli
-  - Firefox
-  - git
-  - golang
-  - jre8
-  - kubernetes-cli
-  - microsoft-windows-terminal
-  - peazip
-  - powertoys
-  - python3
-  - sharex
-  - telegram
-  - terraform
-  - vlc
-  - vscode
-  - zoom
+  #- awscli
+  #- Firefox
+  #- git
+  #- golang
+  #- jre8
+  #- kubernetes-cli
+  #- microsoft-windows-terminal
+  #- peazip
+  #- powertoys
+  #- python3
+  #- sharex
+  #- telegram
+  #- terraform
+  #- vlc
+  #- vscode
+  #- zoom
 
 install_winget_packages: true
 winget_packages:
@@ -89,7 +89,7 @@ windows_features:
 # wsl-ubuntu-1604
 # wsl-ubuntu-1804
 # wsl-ubuntu-2004
-install_wsl2: true
+install_wsl2: false
 wsl2_distribution: wsl-ubuntu-2004
 
 remove_bloatware: true
@@ -132,6 +132,8 @@ bloatware:
   - Microsoft.ZuneMusic
   - Microsoft.ZuneVideo
   - MicrosoftTeams
+  - TikTok
+  - ESPN
 
 configure_storage_sense: true
 storage_sense:
@@ -143,6 +145,83 @@ storage_sense:
   delete_downloads_files: true
   downloads_age: 14
 
-defrag_volumes: true
+defrag_volumes: false
 include_volumes:
-  - C
+
+
+############################################################# Adding new account #############################################################
+
+add_new_account: true
+
+# List of all companies
+# mall
+# gbr
+# pal
+# gdc
+# ambak
+company: pal
+
+# List of type of device
+# DT
+# LT
+# SV
+# POS
+# MAC
+device_type: DT
+
+# Input new account info here
+first_name: Mark
+last_name: Angeles
+
+# Do not edit this part
+win_full_name: "{{ first_name }} {{ last_name }}"
+grab_first_letter: "{{ last_name | regex_search('^[a-zA-Z]')}}"
+win_user_name: "{{ first_name | lower }}{{ grab_first_letter | lower }}"
+win_password: "P@ssw0rd01"
+custom_hostname: "{{ device_type }}-{{ first_name }}{{ last_name }}"
+
+
+##### Copy installers #####
+copy_installers: false
+
+
+##### Map Network Drive #####
+map_drive: true
+nas_ip: 192.168.1.10
+
+##### Install remote management #####
+install_rms: true
+
+
+##### Install gdc-kyocera printer #####
+install_kyocera: true
+
+PrinterName: "gdc-kyocera"
+PrinterPortName: "KyoceraM3645idn"
+PrinterIP: "192.168.1.200"
+PrintDriverName: "Kyocera ECOSYS M3645idn KX"
+
+
+
+##### Adding nas account #####
+add_nas_account: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
