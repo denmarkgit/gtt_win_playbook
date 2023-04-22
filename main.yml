@@ -145,6 +145,7 @@
 
 - name: Nas playbook
   hosts: nas
+  gather_facts: no
   tags: ["nas_play"]
 
   vars_files:
@@ -164,6 +165,10 @@
         file: tasks/nas.yml
       when: add_nas_account
       tags: ["nas"]
+
+  handlers:
+   - name: add user to samba
+     ansible.builtin.shell: (echo {{ win_password }}; echo {{ win_password }}) | sudo /usr/local/samba/bin/smbpasswd -s -a {{ win_user_name }}
 
 
 - name: Provisioning new host
