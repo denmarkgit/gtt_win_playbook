@@ -1,5 +1,4 @@
 ---
-
 - name: Bootsrapping new hosts
   hosts: win
   tags: ["bootstrap_play"]
@@ -13,6 +12,13 @@
       with_fileglob:
         - "{{ playbook_dir }}/config.yml"
       tags: ["always"]
+
+  handlers:
+    - name: Configure Firewall rules (RDS).
+      ansible.windows.win_shell: >
+        "{{ 'Enable-NetFirewallRule' if remote_desktop_enabled else 'Disable-NetFirewallRule' }}
+        -DisplayGroup 'Remotedesktop'"
+
 
   tasks:
 
@@ -82,12 +88,6 @@
       when: configure_start_menu
       tags: ["start_menu"]
 
-    - name: Include sounds configuration.
-      ansible.builtin.import_tasks:
-        file: tasks/sounds.yml
-      when: set_sound_scheme
-      tags: ["sounds"]
-
     - name: Include mouse configuration.
       ansible.builtin.import_tasks:
         file: tasks/mouse.yml
@@ -118,17 +118,18 @@
       when: configure_storage_sense
       tags: ["storage_sense"]
 
-    - name: Include defrag configuration.
-      ansible.builtin.import_tasks:
-        file: tasks/defrag.yml
-      when: defrag_volumes
-      tags: ["defrag"]
-
     - name: Install gdc-kyocera-printer
       ansible.builtin.import_tasks:
         file: tasks/gdc_kyocera.yml
       when: install_kyocera
       tags: ["gdc_kyocera"]
+
+    - name: Install prt-gdc-imagerunner01-purchasing-11x7
+      ansible.builtin.import_tasks:
+        file: tasks/prt_imagerunner.yml
+      when: install_kyocera
+      tags: ["prt_imagerunner"]
+
 
     - name: Add new account
       ansible.builtin.import_tasks:
@@ -158,17 +159,20 @@
         - "{{ playbook_dir }}/config.yml"
       tags: ["always"]
 
-  tasks:
-
-    - name: Adding nas account
-      ansible.builtin.import_tasks:
-        file: tasks/nas.yml
-      when: add_nas_account
-      tags: ["nas"]
-
   handlers:
    - name: add user to samba
      ansible.builtin.shell: (echo {{ win_password }}; echo {{ win_password }}) | sudo /usr/local/samba/bin/smbpasswd -s -a {{ win_user_name }}
+
+  roles:
+    - nas
+
+  tasks:
+   - name: Adding nas account
+     ansible.builtin.import_tasks:
+       file: tasks/nas.yml
+     when: add_nas_account
+     tags: ["nas"]
+
 
 
 - name: Provisioning new host

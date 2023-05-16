@@ -1,7 +1,6 @@
 ---
 configure_explorer: true
 configure_hostname: true
-#custom_hostname: windows-ansible
 configure_start_menu: true
 configure_taskbar: true
 disable_mouse_acceleration: true
@@ -9,8 +8,8 @@ remote_desktop_enabled: true
 remove_desktop_icons: true
 set_sound_scheme: true
 
-install_windows_updates: true
-windows_updates_reboot: true
+install_windows_updates: false
+windows_updates_reboot: false
 update_categories:
   # You can install only specific updates by uncommenting it
   # * - installs all updates
@@ -26,7 +25,7 @@ update_categories:
   # - Updates
   # - Upgrades
 
-change_power_plan: true
+change_power_plan: false
 # high_performance
 # balanced
 # power_saver
@@ -41,6 +40,14 @@ choco_installed_packages:
   - name: Firefox
     state: latest
     choco_args: --ignorechecksum
+  - name: googlechrome
+    state: latest
+    choco_args: --ignorechecksum
+
+  - name: 7zip
+    state: latest
+    choco_args: --ignorechecksum
+  #
   # installs awscli, but won't update it
   #- awscli
   #- Firefox
@@ -59,19 +66,19 @@ choco_installed_packages:
   #- vscode
   #- zoom
 
-install_winget_packages: true
+install_winget_packages: false
 winget_packages:
   # - name: "Auto Dark Mode"
   #   source: winget
   - name: WinDynamicDesktop
     source: winget
 
-install_fonts: true
+install_fonts: false
 installed_nerdfonts:
   - FiraCode
   - FantasqueSansMono
 
-install_ohmyposh: true
+install_ohmyposh: false
 
 # List of features: "Get-WindowsOptionalFeature -Online"
 install_windows_features: false
@@ -135,7 +142,7 @@ bloatware:
   - TikTok
   - ESPN
 
-configure_storage_sense: true
+configure_storage_sense: false
 storage_sense:
   enabled: true
   run_frequency: 1
@@ -145,8 +152,8 @@ storage_sense:
   delete_downloads_files: true
   downloads_age: 14
 
-defrag_volumes: false
-include_volumes:
+defrag_volumes: no
+include_volumes: false
 
 
 ############################################################# Adding new account #############################################################
@@ -159,7 +166,7 @@ add_new_account: true
 # pal
 # gdc
 # ambak
-company: pal
+company: gdc
 
 # List of type of device
 # DT
@@ -167,11 +174,11 @@ company: pal
 # SV
 # POS
 # MAC
-device_type: DT
+device_type: LT
 
 # Input new account info here
-first_name: Mark
-last_name: Angeles
+first_name: Susana
+last_name: Ligeralde
 
 # Do not edit this part
 win_full_name: "{{ first_name }} {{ last_name }}"
@@ -182,7 +189,7 @@ custom_hostname: "{{ device_type }}-{{ first_name }}{{ last_name }}"
 
 
 ##### Copy installers #####
-copy_installers: false
+copy_installers: true
 
 
 ##### Map Network Drive #####
@@ -196,15 +203,25 @@ install_rms: true
 ##### Install gdc-kyocera printer #####
 install_kyocera: true
 
-PrinterName: "gdc-kyocera"
+PrinterName: "prt-gdc-kyocera01-accounting-Letter Legal"
 PrinterPortName: "KyoceraM3645idn"
 PrinterIP: "192.168.1.200"
 PrintDriverName: "Kyocera ECOSYS M3645idn KX"
 
+##### Install Install prt-gdc-imagerunner01-purchasing-11x7  #####
+prt_imagerunner: true
+
+IRPrinterName: "prt-gdc-imagerunner01-purchasing-11x7"
+IRPrinterPortName: "imagerunner001"
+IRPrinterIP: "192.168.1.115"
+IRPrintDriverName: "Canon Generic Plus PCL6 V272"
+
+
+
 
 
 ##### Adding nas account #####
-add_nas_account: true
+add_nas_account: false
 
 
 
